@@ -1,9 +1,5 @@
 package org.library.view;
 
-import org.library.exception.InvalidOptionException;
-
-import java.util.Arrays;
-
 public class ConsoleInterface {
 
     public static String mainMenu() {
@@ -21,22 +17,5 @@ public class ConsoleInterface {
         sb.append("Select an option: ");
 
         return sb.toString();
-    }
-
-    public void registerBook() {
-
-    }
-
-    public static int verifyMenuInput(String input) {
-
-        String[] options = {"0", "1", "2", "3", "4", "5", "6"};
-
-        boolean validInput = Arrays.stream(options).anyMatch(x -> x.equals(input));
-
-        if (validInput) {
-            return Integer.parseInt(input);
-        } else {
-            throw new InvalidOptionException("Invalid option, please choose a valid option.");
-        }
     }
 }
