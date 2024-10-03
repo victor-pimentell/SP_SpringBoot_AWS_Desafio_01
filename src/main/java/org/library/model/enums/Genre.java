@@ -1,0 +1,35 @@
+package org.library.model.enums;
+
+public enum Genre {
+
+    LITERARY_FICTION,
+    HISTORICAL_FICTION,
+    SCIENCE_FICTION,
+    FANTASY,
+    THRILLER,
+    MYSTERY,
+    ROMANCE,
+    HORROR,
+    DYSTOPIAN,
+    ADVENTURE,
+    BIOGRAPHY,
+    AUTOBIOGRAPHY,
+    MEMOIR,
+    SELF_HELP,
+    HISTORY,
+    TRUE_CRIME,
+    SCIENCE,
+    PHILOSOPHY,
+    BUSINESS,
+    PSYCHOLOGY,
+    POETRY,
+    GRAPHIC_NOVEL,
+    YOUNG_ADULT,
+    CHILDRENS_BOOK,
+    RELIGIOUS_SPIRITUAL,
+    TRAVEL,
+    COOKING,
+    ESSAYS,
+    HUMOR,
+    SHORT_STORIES;
+}
