@@ -1,6 +1,7 @@
 package org.library;
 
 import org.library.exception.InvalidOptionException;
+import org.library.util.CheckMenuEntry;
 import org.library.view.ConsoleInterface;
 
 import java.util.Scanner;
@@ -15,7 +16,7 @@ public class Application {
         while (appCycle) {
             try {
                 System.out.print(ConsoleInterface.mainMenu());
-                int input = ConsoleInterface.verifyMenuInput(sc.nextLine());
+                int input = CheckMenuEntry.verifyMenuInput(sc.nextLine());
                 switch (input) {
                     case 1:
                         appCycle = false;
