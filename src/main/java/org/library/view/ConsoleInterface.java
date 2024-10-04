@@ -1,8 +1,12 @@
 package org.library.view;
 
 import org.library.controller.AuthorController;
+import org.library.controller.BookController;
+import org.library.model.Author;
+import org.library.util.CheckEntry;
 import org.library.util.DateFormat;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class ConsoleInterface {
@@ -30,22 +34,64 @@ public class ConsoleInterface {
         return sb.toString();
     }
 
-    public void registerAuthor() {
+    public Author registerAuthor() {
         AuthorController authorController = new AuthorController();
 
         System.out.println("==================== Author ====================");
-        System.out.print("Type a name: ");
+        System.out.print("Name: ");
         String name = sc.nextLine();
 
-        System.out.print("Type a birth date: ");
+        System.out.print("Birth date: ");
         String birthDate = sc.nextLine();
 
-        System.out.print("Type a nationality: ");
+        System.out.print("Nationality: ");
         String nationality = sc.nextLine();
 
-        System.out.print("Type a biography: ");
+        System.out.print("Biography: ");
         String biography = sc.nextLine();
 
-        authorController.registerAuthor(name, DateFormat.getDate(birthDate), nationality, biography);
+        System.out.println("==================== Author ====================");
+        return authorController.registerAuthor(name, DateFormat.getDate(birthDate), nationality, biography);
+    }
+
+    public void registerBook() {
+        BookController bookController = new BookController();
+
+        System.out.println("==================== Book ====================");
+        System.out.print("Title: ");
+        String title = sc.nextLine();
+
+        System.out.print("Publication Date: ");
+        String publicationDate = sc.nextLine();
+
+        System.out.print("ISBN: ");
+        String isbn = sc.nextLine();
+
+        System.out.print("Quantity: ");
+        int quatity = verifyInteger();
+
+        Author author = registerAuthor();
+
+        bookController.registerBook(title, author, DateFormat.getDate(publicationDate), isbn, quatity);
+        System.out.println("==================== Book ====================");
+    }
+
+    private int verifyInteger() {
+        int number = 0;
+        boolean validInput = false;
+
+        while (!validInput) {
+            try {
+                number = sc.nextInt();
+                validInput = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input, try again.");
+                System.out.print("Quantity: ");
+                sc.next();
+            } finally {
+                sc.nextLine();
+            }
+        }
+        return number;
     }
 }

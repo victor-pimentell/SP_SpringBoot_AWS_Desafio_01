@@ -2,7 +2,7 @@ package org.library;
 
 import org.library.exception.AuthorAlreadyRegisteredException;
 import org.library.exception.InvalidOptionException;
-import org.library.util.CheckMenuEntry;
+import org.library.util.CheckEntry;
 import org.library.view.ConsoleInterface;
 
 import java.util.Scanner;
@@ -19,13 +19,13 @@ public class Application {
         while (appCycle) {
             try {
                 System.out.print(consoleInterface.mainMenu());
-                int input = CheckMenuEntry.verifyMenuInput(sc.nextLine());
+                int input = CheckEntry.verifyMenuInput(sc.nextLine());
                 switch (input) {
                     case 1:
-                        consoleInterface.registerAuthor();
+                        consoleInterface.registerBook();
                         break;
                     case 2:
-                        appCycle = false;
+                        consoleInterface.registerAuthor();
                         break;
                     case 3:
                         appCycle = false;

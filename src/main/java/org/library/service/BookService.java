@@ -7,8 +7,8 @@ public class BookService {
 
     private Repository<Book> repository;
 
-    public BookService(Repository<Book> repository) {
-        this.repository = repository;
+    public BookService() {
+        repository = new Repository<>();
     }
 
     public void registerBook(Book book) {

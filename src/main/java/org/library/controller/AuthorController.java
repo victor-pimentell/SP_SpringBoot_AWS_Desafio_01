@@ -13,8 +13,9 @@ public class AuthorController {
         authorService = new AuthorService();
     }
 
-    public void registerAuthor(String name, LocalDate bithDate, String nationality, String biography) {
+    public Author registerAuthor(String name, LocalDate bithDate, String nationality, String biography) {
         Author author = new Author(name, bithDate, nationality, biography);
         authorService.registerAuthor(author);
+        return author;
     }
 }
