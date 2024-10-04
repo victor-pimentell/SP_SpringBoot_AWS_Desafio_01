@@ -2,8 +2,8 @@ package org.library.view;
 
 import org.library.controller.AuthorController;
 import org.library.controller.BookController;
+import org.library.controller.MemberController;
 import org.library.model.Author;
-import org.library.util.CheckEntry;
 import org.library.util.DateFormat;
 
 import java.util.InputMismatchException;
@@ -74,6 +74,29 @@ public class ConsoleInterface {
 
         bookController.registerBook(title, author, DateFormat.getDate(publicationDate), isbn, quatity);
         System.out.println("==================== Book ====================");
+    }
+
+    public void registerMember() {
+        MemberController memberController = new MemberController();
+
+        System.out.println("==================== Member ====================");
+        System.out.print("Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Address: ");
+        String address = sc.nextLine();
+
+        System.out.print("Phone Number: ");
+        String phoneNumber = sc.nextLine();
+
+        System.out.print("Email: ");
+        String email = sc.nextLine();
+
+        System.out.print("Association date: ");
+        String associationDate = sc.nextLine();
+
+        memberController.registerMember(name, address, phoneNumber, email, DateFormat.getDate(associationDate));
+        System.out.println("==================== Member ====================");
     }
 
     private int verifyInteger() {

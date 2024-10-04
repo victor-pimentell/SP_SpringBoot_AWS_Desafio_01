@@ -28,7 +28,7 @@ public class Application {
                         consoleInterface.registerAuthor();
                         break;
                     case 3:
-                        appCycle = false;
+                        consoleInterface.registerMember();
                         break;
                     case 4:
                         appCycle = false;
