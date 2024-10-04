@@ -1,8 +1,19 @@
 package org.library.view;
 
+import org.library.controller.AuthorController;
+import org.library.util.DateFormat;
+
+import java.util.Scanner;
+
 public class ConsoleInterface {
 
-    public static String mainMenu() {
+    private Scanner sc;
+
+    public ConsoleInterface(Scanner sc) {
+        this.sc = sc;
+    }
+
+    public String mainMenu() {
         StringBuilder sb = new StringBuilder();
 
         sb.append("==================== Library System ====================\n");
@@ -17,5 +28,24 @@ public class ConsoleInterface {
         sb.append("Select an option: ");
 
         return sb.toString();
+    }
+
+    public void registerAuthor() {
+        AuthorController authorController = new AuthorController();
+
+        System.out.println("==================== Author ====================");
+        System.out.print("Type a name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Type a birth date: ");
+        String birthDate = sc.nextLine();
+
+        System.out.print("Type a nationality: ");
+        String nationality = sc.nextLine();
+
+        System.out.print("Type a biography: ");
+        String biography = sc.nextLine();
+
+        authorController.registerAuthor(name, DateFormat.getDate(birthDate), nationality, biography);
     }
 }

@@ -1,5 +1,6 @@
 package org.library;
 
+import org.library.exception.AuthorAlreadyRegisteredException;
 import org.library.exception.InvalidOptionException;
 import org.library.util.CheckMenuEntry;
 import org.library.view.ConsoleInterface;
@@ -11,15 +12,17 @@ public class Application {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+        ConsoleInterface consoleInterface = new ConsoleInterface(sc);
+
         boolean appCycle = true;
 
         while (appCycle) {
             try {
-                System.out.print(ConsoleInterface.mainMenu());
+                System.out.print(consoleInterface.mainMenu());
                 int input = CheckMenuEntry.verifyMenuInput(sc.nextLine());
                 switch (input) {
                     case 1:
-                        appCycle = false;
+                        consoleInterface.registerAuthor();
                         break;
                     case 2:
                         appCycle = false;
@@ -41,6 +44,8 @@ public class Application {
                         break;
                 }
             } catch (InvalidOptionException e) {
+                System.out.println(e.getMessage());
+            } catch (AuthorAlreadyRegisteredException e) {
                 System.out.println(e.getMessage());
             }
 
