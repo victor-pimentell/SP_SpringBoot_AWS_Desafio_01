@@ -7,8 +7,8 @@ public class MemberService {
 
     private Repository<Member> repository;
 
-    public MemberService(Repository<Member> repository) {
-        this.repository = repository;
+    public MemberService() {
+        repository = new Repository<>();
     }
 
     public void registerMember(Member member) {

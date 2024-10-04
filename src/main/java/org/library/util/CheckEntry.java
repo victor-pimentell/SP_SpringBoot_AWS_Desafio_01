@@ -3,8 +3,10 @@ package org.library.util;
 import org.library.exception.InvalidOptionException;
 
 import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
-public class CheckMenuEntry {
+public class CheckEntry {
 
     public static int verifyMenuInput(String input) {
         String[] options = {"0", "1", "2", "3", "4", "5", "6"};
