@@ -2,19 +2,38 @@ package org.library.view;
 
 import org.library.controller.AuthorController;
 import org.library.controller.BookController;
+import org.library.controller.CheckoutController;
 import org.library.controller.MemberController;
+import org.library.exception.InvalidOptionException;
+import org.library.exception.MemberNotFoundException;
 import org.library.model.Author;
+import org.library.model.Book;
+import org.library.model.Checkout;
+import org.library.model.Member;
+import org.library.model.enums.CheckoutState;
+import org.library.util.CheckEntry;
 import org.library.util.DateFormat;
 
+import java.time.LocalDate;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleInterface {
 
     private Scanner sc;
 
+    private AuthorController authorController;
+    private BookController bookController;
+    private MemberController memberController;
+    private CheckoutController checkoutController;
+
     public ConsoleInterface(Scanner sc) {
         this.sc = sc;
+        authorController = new AuthorController();
+        bookController = new BookController();
+        memberController = new MemberController();
+        checkoutController = new CheckoutController();
     }
 
     public String mainMenu() {
@@ -35,8 +54,6 @@ public class ConsoleInterface {
     }
 
     public Author registerAuthor() {
-        AuthorController authorController = new AuthorController();
-
         System.out.println("==================== Author ====================");
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -55,8 +72,6 @@ public class ConsoleInterface {
     }
 
     public void registerBook() {
-        BookController bookController = new BookController();
-
         System.out.println("==================== Book ====================");
         System.out.print("Title: ");
         String title = sc.nextLine();
@@ -77,8 +92,6 @@ public class ConsoleInterface {
     }
 
     public void registerMember() {
-        MemberController memberController = new MemberController();
-
         System.out.println("==================== Member ====================");
         System.out.print("Name: ");
         String name = sc.nextLine();
@@ -97,6 +110,72 @@ public class ConsoleInterface {
 
         memberController.registerMember(name, address, phoneNumber, email, DateFormat.getDate(associationDate));
         System.out.println("==================== Member ====================");
+    }
+
+    public void makeCheckout() {
+        System.out.println("==================== Checkout ====================");
+
+        Member member = null;
+
+        while (member == null) {
+            try {
+                System.out.print("Type a member's email: ");
+                String email = sc.nextLine();
+                member = memberController.getMemberByEmail(email);
+            } catch (MemberNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        System.out.println("Books Available:");
+        List<Book> books = bookController.booksAvailable();
+        books.forEach(System.out::println);
+
+        Book book = null;
+
+        while (book == null) {
+            System.out.print("Please enter a book id: ");
+            int id = sc.nextInt();
+
+            book = books.stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+
+            if (book == null) {
+                System.out.println("Invalid id, please choose an id from the list: ");
+            }
+        }
+
+        int option = 0;
+
+        while (option == 0) {
+            try {
+                System.out.println("Checkout date");
+                System.out.println("Would you like to use: ");
+                System.out.println("1 - Present date \n2 - Insert a date");
+                System.out.print("Select an option: ");
+                option = CheckEntry.verifyMenuInput(sc.nextLine(), new String[]{"1", "2"});
+            } catch (InvalidOptionException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        LocalDate checkoutDate = null;
+
+        switch (option) {
+            case 1:
+                checkoutDate = LocalDate.now();
+                System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
+                break;
+            case 2:
+                System.out.print("Enter checkout date: ");
+                checkoutDate = DateFormat.getDate(sc.nextLine());
+                System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
+        }
+
+        System.out.print("Enter checkout due date: ");
+        LocalDate dueDate = DateFormat.getDate(sc.nextLine());
+
+        checkoutController.makeCheckout(book, member, checkoutDate, dueDate, CheckoutState.ACTIVE);
+        System.out.println("==================== Checkout ====================");
     }
 
     private int verifyInteger() {

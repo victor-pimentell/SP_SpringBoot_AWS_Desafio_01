@@ -19,7 +19,7 @@ public class Application {
         while (appCycle) {
             try {
                 System.out.print(consoleInterface.mainMenu());
-                int input = CheckEntry.verifyMenuInput(sc.nextLine());
+                int input = CheckEntry.verifyMenuInput(sc.nextLine(), new String[]{"0", "1", "2", "3", "4", "5", "6"});
                 switch (input) {
                     case 1:
                         consoleInterface.registerBook();
@@ -31,7 +31,7 @@ public class Application {
                         consoleInterface.registerMember();
                         break;
                     case 4:
-                        appCycle = false;
+                        consoleInterface.makeCheckout();
                         break;
                     case 5:
                         appCycle = false;
@@ -48,7 +48,6 @@ public class Application {
             } catch (AuthorAlreadyRegisteredException e) {
                 System.out.println(e.getMessage());
             }
-
         }
         sc.close();
     }

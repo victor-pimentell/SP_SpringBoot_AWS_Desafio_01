@@ -5,6 +5,7 @@ import org.library.model.Book;
 import org.library.service.BookService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class BookController {
 
@@ -17,5 +18,9 @@ public class BookController {
     public void registerBook(String title, Author author, LocalDate publicationDate, String isbn, int quatity) {
         Book book = new Book(title, author, publicationDate, isbn, quatity);
         bookService.registerBook(book);
+    }
+
+    public List<Book> booksAvailable() {
+        return bookService.booksAvailable();
     }
 }
