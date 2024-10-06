@@ -17,4 +17,8 @@ public class MemberController {
         Member member = new Member(name, address, phoneNumber, email, associationDate);
         memberService.registerMember(member);
     }
+
+    public Member getMemberByEmail(String email) {
+        return memberService.getMemberByEmail(email);
+    }
 }

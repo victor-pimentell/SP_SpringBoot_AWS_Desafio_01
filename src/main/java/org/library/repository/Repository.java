@@ -32,20 +32,20 @@ public class Repository<T> {
         return entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.quantity > 0", classs).getResultList();
     }
 
-    public T getObjByName(Class<T> clazz, String name) {
-        TypedQuery<T> query = entityManager.createQuery("FROM " + clazz.getName() + " obj WHERE obj.name = :name", clazz);
+    public T getObjByName(Class<T> classs, String name) {
+        TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.name = :name", classs);
         query.setParameter("name", name);
         return query.getSingleResult();
     }
 
-    public T getObjByIsbn(Class<T> clazz, String isbn) {
-        TypedQuery<T> query = entityManager.createQuery("FROM " + clazz.getName() + " obj WHERE obj.isbn = :isbn", clazz);
+    public T getObjByIsbn(Class<T> classs, String isbn) {
+        TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.isbn = :isbn", classs);
         query.setParameter("isbn", isbn);
         return query.getSingleResult();
     }
 
-    public T getObjByEmail(Class<T> clazz, String email) {
-        TypedQuery<T> query = entityManager.createQuery("FROM " + clazz.getName() + " obj WHERE obj.email = :email", clazz);
+    public T getObjByEmail(Class<T> classs, String email) {
+        TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.email = :email", classs);
         query.setParameter("email", email);
         return query.getSingleResult();
     }

@@ -1,6 +1,7 @@
 package org.library.model;
 
 import org.library.model.enums.Genre;
+import org.library.util.DateFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -106,5 +107,16 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, author, publicationDate, isbn);
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id
+                + " | Title: " + title
+                + " | Author: " + author.getName()
+                + " | Publication Date: " + DateFormat.dateFormat(publicationDate)
+                + " | ISBN: " + isbn
+                + " | Genres: " + genres
+                + " | Quantity: " + quantity;
     }
 }
