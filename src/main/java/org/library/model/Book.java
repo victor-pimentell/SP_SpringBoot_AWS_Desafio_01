@@ -35,13 +35,13 @@ public class Book {
     public Book() {
     }
 
-    public Book(String title, Author author, LocalDate publicationDate, String isbn, Integer quantity) {
+    public Book(String title, Author author, LocalDate publicationDate, String isbn, List<Genre> genres, Integer quantity) {
         this.title = title;
         this.author = author;
         this.publicationDate = publicationDate;
         this.isbn = isbn;
+        this.genres = genres;
         this.quantity = quantity;
-        genres = new ArrayList<>();
     }
 
     public Long getId() {
