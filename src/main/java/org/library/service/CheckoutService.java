@@ -42,16 +42,18 @@ public class CheckoutService {
 
     private List<Checkout> calculateFine(List<Checkout> checkouts) {
         for (Checkout checkout : checkouts) {
-            LocalDate checkoutDate = checkout.getCheckoutDate();
             LocalDate dueDate = checkout.getDueDate();
 
-            long days = ChronoUnit.DAYS.between(checkoutDate, dueDate);
+            if (dueDate != null) {
+                long days = ChronoUnit.DAYS.between(dueDate, LocalDate.now());
 
-            if (days > 5) {
-                BigDecimal fine = BigDecimal.valueOf((days - 5) * 2.0);
+                if (days > 0) {
+                    BigDecimal fine = BigDecimal.valueOf((days - 5) * 2.0);
 
-                checkout.setFine(fine);
-                checkout.setCheckoutState(CheckoutState.OVERDUE);
+                    checkout.setFine(fine);
+                    checkout.setCheckoutState(CheckoutState.OVERDUE);
+                    makeCheckout(checkout);
+                }
             }
         }
         return checkouts;

@@ -5,7 +5,6 @@ import org.library.controller.BookController;
 import org.library.controller.CheckoutController;
 import org.library.controller.MemberController;
 import org.library.exception.CheckoutOverdueException;
-import org.library.exception.InvalidOptionException;
 import org.library.exception.MaxNumberBookBorrowedException;
 import org.library.exception.MemberNotFoundException;
 import org.library.model.Author;
@@ -13,7 +12,6 @@ import org.library.model.Book;
 import org.library.model.Checkout;
 import org.library.model.Member;
 import org.library.model.enums.CheckoutState;
-import org.library.util.CheckEntry;
 import org.library.util.DateFormat;
 
 import java.time.LocalDate;
@@ -131,10 +129,11 @@ public class ConsoleInterface {
 
         List<Checkout> checkouts = checkoutController.checkoutMemberList(member.getId());
         boolean overdue = checkouts.stream().anyMatch(x -> x.getCheckoutState() == CheckoutState.OVERDUE);
+        int checkoutActiveSize = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.ACTIVE).toList().size();
 
         if (overdue) {
             throw new CheckoutOverdueException("One of the books borrowed has passed the period of return, please return and pay your fine before borrowing a new book.");
-        } else if (checkouts.size() >= 5) {
+        } else if (checkoutActiveSize >= 5) {
             throw new MaxNumberBookBorrowedException("Limit of books borrowed achieved, please return a book before borrowing another.");
         }
 
@@ -184,7 +183,7 @@ public class ConsoleInterface {
         }
 
         List<Checkout> checkouts = checkoutController.checkoutMemberList(member.getId());
-        checkouts = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.ACTIVE && x.getCheckoutState() == CheckoutState.OVERDUE).toList();
+        checkouts = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.ACTIVE || x.getCheckoutState() == CheckoutState.OVERDUE).toList();
 
         System.out.println("Books to return");
         checkouts.forEach(System.out::println);
@@ -207,10 +206,11 @@ public class ConsoleInterface {
             System.out.printf("The return period has passed, to have access to " +
                     "new books you need to pay a fine of $ %.2f%n", checkout.getFine());
 
-            sc.nextLine();
 
             System.out.println("Press enter to confirm the payment. ");
+            sc.nextLine();
             checkout.setCheckoutState(CheckoutState.RETURNED);
+            checkout.setDueDate(null);
         } else {
             checkout.setCheckoutState(CheckoutState.RETURNED);
             System.out.println("Thank you for returning the book within the period.");
