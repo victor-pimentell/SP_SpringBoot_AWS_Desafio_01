@@ -4,7 +4,9 @@ import org.library.controller.AuthorController;
 import org.library.controller.BookController;
 import org.library.controller.CheckoutController;
 import org.library.controller.MemberController;
+import org.library.exception.CheckoutOverdueException;
 import org.library.exception.InvalidOptionException;
+import org.library.exception.MaxNumberBookBorrowedException;
 import org.library.exception.MemberNotFoundException;
 import org.library.model.Author;
 import org.library.model.Book;
@@ -21,12 +23,12 @@ import java.util.Scanner;
 
 public class ConsoleInterface {
 
-    private Scanner sc;
+    private final Scanner sc;
 
-    private AuthorController authorController;
-    private BookController bookController;
-    private MemberController memberController;
-    private CheckoutController checkoutController;
+    private final AuthorController authorController;
+    private final BookController bookController;
+    private final MemberController memberController;
+    private final CheckoutController checkoutController;
 
     public ConsoleInterface(Scanner sc) {
         this.sc = sc;
@@ -112,7 +114,7 @@ public class ConsoleInterface {
         System.out.println("==================== Member ====================");
     }
 
-    public void makeCheckout() {
+    public void bookCheckout() {
         System.out.println("==================== Checkout ====================");
 
         Member member = null;
@@ -127,6 +129,15 @@ public class ConsoleInterface {
             }
         }
 
+        List<Checkout> checkouts = checkoutController.checkoutMemberList(member.getId());
+        boolean overdue = checkouts.stream().anyMatch(x -> x.getCheckoutState() == CheckoutState.OVERDUE);
+
+        if (overdue) {
+            throw new CheckoutOverdueException("One of the books borrowed has passed the period of return, please return and pay your fine before borrowing a new book.");
+        } else if (checkouts.size() >= 5) {
+            throw new MaxNumberBookBorrowedException("Limit of books borrowed achieved, please return a book before borrowing another.");
+        }
+
         System.out.println("Books Available:");
         List<Book> books = bookController.booksAvailable();
         books.forEach(System.out::println);
@@ -136,6 +147,7 @@ public class ConsoleInterface {
         while (book == null) {
             System.out.print("Please enter a book id: ");
             int id = sc.nextInt();
+            sc.nextLine();
 
             book = books.stream().filter(x -> x.getId() == id).findFirst().orElse(null);
 
@@ -144,38 +156,71 @@ public class ConsoleInterface {
             }
         }
 
-        int option = 0;
+        book.setQuantity(book.getQuantity() - 1);
+        bookController.registerBook(book);
 
-        while (option == 0) {
+        LocalDate checkoutDate = LocalDate.now();
+        System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
+
+        LocalDate dueDate = checkoutDate.plusDays(5);
+        System.out.print("Checkout due date set to " + DateFormat.dateFormat(dueDate));
+
+        checkoutController.registerCheckout(book, member, checkoutDate, dueDate, CheckoutState.ACTIVE);
+        System.out.println("==================== Checkout ====================");
+    }
+
+    public void bookReturn() {
+        System.out.println("==================== Return ====================");
+        Member member = null;
+
+        while (member == null) {
             try {
-                System.out.println("Checkout date");
-                System.out.println("Would you like to use: ");
-                System.out.println("1 - Present date \n2 - Insert a date");
-                System.out.print("Select an option: ");
-                option = CheckEntry.verifyMenuInput(sc.nextLine(), new String[]{"1", "2"});
-            } catch (InvalidOptionException e) {
+                System.out.print("Type a member's email: ");
+                String email = sc.nextLine();
+                member = memberController.getMemberByEmail(email);
+            } catch (MemberNotFoundException e) {
                 System.out.println(e.getMessage());
             }
         }
 
-        LocalDate checkoutDate = null;
+        List<Checkout> checkouts = checkoutController.checkoutMemberList(member.getId());
+        checkouts = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.ACTIVE && x.getCheckoutState() == CheckoutState.OVERDUE).toList();
 
-        switch (option) {
-            case 1:
-                checkoutDate = LocalDate.now();
-                System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
-                break;
-            case 2:
-                System.out.print("Enter checkout date: ");
-                checkoutDate = DateFormat.getDate(sc.nextLine());
-                System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
+        System.out.println("Books to return");
+        checkouts.forEach(System.out::println);
+
+        Checkout checkout = null;
+
+        while (checkout == null) {
+            System.out.print("Please enter a checkout id: ");
+            int id = sc.nextInt();
+            sc.nextLine();
+
+            checkout = checkouts.stream().filter(x -> x.getId() == id).findFirst().orElse(null);
+
+            if (checkout == null) {
+                System.out.println("Invalid id, please choose an id from the list: ");
+            }
         }
 
-        System.out.print("Enter checkout due date: ");
-        LocalDate dueDate = DateFormat.getDate(sc.nextLine());
+        if (checkout.getCheckoutState() == CheckoutState.OVERDUE) {
+            System.out.printf("The return period has passed, to have access to " +
+                    "new books you need to pay a fine of $ %.2f%n", checkout.getFine());
 
-        checkoutController.makeCheckout(book, member, checkoutDate, dueDate, CheckoutState.ACTIVE);
-        System.out.println("==================== Checkout ====================");
+            sc.nextLine();
+
+            System.out.println("Press enter to confirm the payment. ");
+            checkout.setCheckoutState(CheckoutState.RETURNED);
+        } else {
+            checkout.setCheckoutState(CheckoutState.RETURNED);
+            System.out.println("Thank you for returning the book within the period.");
+        }
+
+        Book book = bookController.getBookById(checkout.getBook().getId());
+        book.setQuantity(book.getQuantity() + 1);
+        bookController.registerBook(book);
+
+        checkoutController.registerCheckout(checkout);
     }
 
     private int verifyInteger() {

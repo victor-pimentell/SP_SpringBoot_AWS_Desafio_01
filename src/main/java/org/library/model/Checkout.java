@@ -105,4 +105,17 @@ public class Checkout {
     public int hashCode() {
         return Objects.hash(id, book, member, checkoutDate, dueDate);
     }
+
+    @Override
+    public String toString() {
+        return "Checkout{" +
+                "id=" + id +
+                ", book=" + book +
+                ", member=" + member +
+                ", checkoutDate=" + checkoutDate +
+                ", dueDate=" + dueDate +
+                ", checkoutState=" + checkoutState +
+                ", fine=" + fine +
+                '}';
+    }
 }

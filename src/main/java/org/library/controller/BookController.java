@@ -20,7 +20,15 @@ public class BookController {
         bookService.registerBook(book);
     }
 
+    public void registerBook(Book book) {
+        bookService.registerBook(book);
+    }
+
     public List<Book> booksAvailable() {
         return bookService.booksAvailable();
+    }
+
+    public Book getBookById(Long id) {
+        return bookService.getBookById(id);
     }
 }

@@ -7,6 +7,7 @@ import org.library.model.enums.CheckoutState;
 import org.library.service.CheckoutService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CheckoutController {
 
@@ -16,7 +17,15 @@ public class CheckoutController {
         checkoutService = new CheckoutService();
     }
 
-    public void makeCheckout(Book book, Member member, LocalDate checkoutDate, LocalDate dueDate, CheckoutState checkoutState) {
+    public void registerCheckout(Book book, Member member, LocalDate checkoutDate, LocalDate dueDate, CheckoutState checkoutState) {
         checkoutService.makeCheckout(new Checkout(book, member, checkoutDate, dueDate, checkoutState));
+    }
+
+    public void registerCheckout(Checkout checkout) {
+        checkoutService.makeCheckout(checkout);
+    }
+
+    public List<Checkout> checkoutMemberList(Long id) {
+        return checkoutService.checkoutMemberList(id);
     }
 }

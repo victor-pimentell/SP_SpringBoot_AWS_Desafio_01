@@ -1,7 +1,9 @@
 package org.library;
 
 import org.library.exception.AuthorAlreadyRegisteredException;
+import org.library.exception.CheckoutOverdueException;
 import org.library.exception.InvalidOptionException;
+import org.library.exception.MaxNumberBookBorrowedException;
 import org.library.util.CheckEntry;
 import org.library.view.ConsoleInterface;
 
@@ -31,10 +33,10 @@ public class Application {
                         consoleInterface.registerMember();
                         break;
                     case 4:
-                        consoleInterface.makeCheckout();
+                        consoleInterface.bookCheckout();
                         break;
                     case 5:
-                        appCycle = false;
+                        consoleInterface.bookReturn();
                         break;
                     case 6:
                         appCycle = false;
@@ -43,9 +45,8 @@ public class Application {
                         appCycle = false;
                         break;
                 }
-            } catch (InvalidOptionException e) {
-                System.out.println(e.getMessage());
-            } catch (AuthorAlreadyRegisteredException e) {
+            } catch (InvalidOptionException | AuthorAlreadyRegisteredException | MaxNumberBookBorrowedException |
+                     CheckoutOverdueException e) {
                 System.out.println(e.getMessage());
             }
         }
