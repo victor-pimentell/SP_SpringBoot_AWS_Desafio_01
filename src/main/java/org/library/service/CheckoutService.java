@@ -37,10 +37,12 @@ public class CheckoutService {
                 .filter(x -> Objects.equals(x.getMember().getId(), id))
                 .toList();
 
-        return calculateFine(checkouts);
+        checkouts = calculateFine(checkouts);
+        checkouts.forEach(this::makeCheckout);
+        return checkouts;
     }
 
-    private List<Checkout> calculateFine(List<Checkout> checkouts) {
+    public List<Checkout> calculateFine(List<Checkout> checkouts) {
         for (Checkout checkout : checkouts) {
             LocalDate dueDate = checkout.getDueDate();
 
@@ -48,11 +50,10 @@ public class CheckoutService {
                 long days = ChronoUnit.DAYS.between(dueDate, LocalDate.now());
 
                 if (days > 0) {
-                    BigDecimal fine = BigDecimal.valueOf((days - 5) * 2.0);
+                    BigDecimal fine = BigDecimal.valueOf(days * 2.0);
 
                     checkout.setFine(fine);
                     checkout.setCheckoutState(CheckoutState.OVERDUE);
-                    makeCheckout(checkout);
                 }
             }
         }
