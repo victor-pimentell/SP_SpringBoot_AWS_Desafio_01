@@ -1,7 +1,10 @@
 package org.library;
 
+import org.library.exception.AuthorAlreadyRegisteredException;
+import org.library.exception.CheckoutOverdueException;
 import org.library.exception.InvalidOptionException;
-import org.library.util.CheckMenuEntry;
+import org.library.exception.MaxNumberBookBorrowedException;
+import org.library.util.CheckEntry;
 import org.library.view.ConsoleInterface;
 
 import java.util.Scanner;
@@ -11,39 +14,41 @@ public class Application {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
+        ConsoleInterface consoleInterface = new ConsoleInterface(sc);
+
         boolean appCycle = true;
 
         while (appCycle) {
             try {
-                System.out.print(ConsoleInterface.mainMenu());
-                int input = CheckMenuEntry.verifyMenuInput(sc.nextLine());
+                System.out.print(consoleInterface.mainMenu());
+                int input = CheckEntry.verifyMenuInput(sc.nextLine(), new String[]{"0", "1", "2", "3", "4", "5", "6"});
                 switch (input) {
                     case 1:
-                        appCycle = false;
+                        consoleInterface.registerBook();
                         break;
                     case 2:
-                        appCycle = false;
+                        consoleInterface.registerAuthor();
                         break;
                     case 3:
-                        appCycle = false;
+                        consoleInterface.registerMember();
                         break;
                     case 4:
-                        appCycle = false;
+                        consoleInterface.bookCheckout();
                         break;
                     case 5:
-                        appCycle = false;
+                        consoleInterface.bookReturn();
                         break;
                     case 6:
-                        appCycle = false;
+                        consoleInterface.report();
                         break;
                     case 0:
                         appCycle = false;
                         break;
                 }
-            } catch (InvalidOptionException e) {
+            } catch (InvalidOptionException | AuthorAlreadyRegisteredException | MaxNumberBookBorrowedException |
+                     CheckoutOverdueException e) {
                 System.out.println(e.getMessage());
             }
-
         }
         sc.close();
     }

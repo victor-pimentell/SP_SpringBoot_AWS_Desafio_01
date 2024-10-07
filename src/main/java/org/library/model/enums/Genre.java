@@ -31,5 +31,18 @@ public enum Genre {
     COOKING,
     ESSAYS,
     HUMOR,
-    SHORT_STORIES;
+    SHORT_STORIES,
+    FICTION,
+    NON_FICTION,
+    DRAMA,
+    CLASSIC,
+    CHILDREN,
+    COMICS,
+    CRIME,
+    RELIGION,
+    ART,
+    GUIDE,
+    HEALTH,
+    MUSIC,
+    SPORTS;
 }

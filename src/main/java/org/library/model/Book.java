@@ -1,10 +1,10 @@
 package org.library.model;
 
 import org.library.model.enums.Genre;
+import org.library.util.DateFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,13 +34,13 @@ public class Book {
     public Book() {
     }
 
-    public Book(String title, Author author, LocalDate publicationDate, String isbn, Integer quantity) {
+    public Book(String title, Author author, LocalDate publicationDate, String isbn, List<Genre> genres, Integer quantity) {
         this.title = title;
         this.author = author;
         this.publicationDate = publicationDate;
         this.isbn = isbn;
+        this.genres = genres;
         this.quantity = quantity;
-        genres = new ArrayList<>();
     }
 
     public Long getId() {
@@ -106,5 +106,16 @@ public class Book {
     @Override
     public int hashCode() {
         return Objects.hash(id, title, author, publicationDate, isbn);
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id
+                + " | Title: " + title
+                + " | Author: " + author.getName()
+                + " | Publication Date: " + DateFormat.dateFormat(publicationDate)
+                + " | ISBN: " + isbn
+                + " | Genres: " + genres
+                + " | Quantity: " + quantity;
     }
 }
