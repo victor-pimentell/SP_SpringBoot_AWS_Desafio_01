@@ -2,6 +2,7 @@ package org.library.controller;
 
 import org.library.model.Author;
 import org.library.model.Book;
+import org.library.model.enums.Genre;
 import org.library.service.BookService;
 
 import java.time.LocalDate;
@@ -15,8 +16,8 @@ public class BookController {
         bookService = new BookService();
     }
 
-    public void registerBook(String title, Author author, LocalDate publicationDate, String isbn, int quatity) {
-        Book book = new Book(title, author, publicationDate, isbn, quatity);
+    public void registerBook(String title, Author author, LocalDate publicationDate, List<Genre> genres, String isbn, int quatity) {
+        Book book = new Book(title, author, publicationDate, isbn, genres, quatity);
         bookService.registerBook(book);
     }
 
@@ -30,5 +31,9 @@ public class BookController {
 
     public Book getBookById(Long id) {
         return bookService.getBookById(id);
+    }
+
+    public void updateBook(Book book) {
+        bookService.updateBook(book);
     }
 }

@@ -3,8 +3,10 @@ package org.library.repository;
 import org.library.util.DbConnection;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 public class Repository<T> {
 
@@ -32,21 +34,33 @@ public class Repository<T> {
         return entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.quantity > 0", classs).getResultList();
     }
 
-    public T getObjByName(Class<T> classs, String name) {
+    public Optional<T> getObjByName(Class<T> classs, String name) {
         TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.name = :name", classs);
         query.setParameter("name", name);
-        return query.getSingleResult();
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
-    public T getObjByIsbn(Class<T> classs, String isbn) {
+    public Optional<T> getObjByIsbn(Class<T> classs, String isbn) {
         TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.isbn = :isbn", classs);
         query.setParameter("isbn", isbn);
-        return query.getSingleResult();
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
-    public T getObjByEmail(Class<T> classs, String email) {
+    public Optional<T> getObjByEmail(Class<T> classs, String email) {
         TypedQuery<T> query = entityManager.createQuery("FROM " + classs.getName() + " obj WHERE obj.email = :email", classs);
         query.setParameter("email", email);
-        return query.getSingleResult();
+        try {
+            return Optional.of(query.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

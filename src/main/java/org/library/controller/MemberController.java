@@ -18,7 +18,7 @@ public class MemberController {
         memberService.registerMember(member);
     }
 
-    public Member getMemberByEmail(String email) {
-        return memberService.getMemberByEmail(email);
+    public Member logMemberByEmail(String email) {
+        return memberService.logMemberByEmail(email);
     }
 }
