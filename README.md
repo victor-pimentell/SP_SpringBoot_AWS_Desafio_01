@@ -33,13 +33,17 @@ currently borrowed books and members with overdue books.
   git clone https://github.com/victor-pimentell/SP_SpringBoot_AWS_Desafio_01.git
 ```
 
-2. Configure the persistence.xml with your database credentials.
+2. Create a schema on your database called "library", here's an example on MySQL WorkBench
+
+![persistence](./docs/schema.png)
+
+3. Configure the persistence.xml with your database credentials.
 
 ![persistence](./docs/persistence.png)
 
-3. Run the project so the JPA can create the tables on the database
+4. Run the project so the JPA can create the tables on the database
 
-4. After running the project go to your database manager and the SQL below to insert the test data.
+5. After running the project go to your database manager and the SQL below to insert the test data.
 
 <details>
   <summary>Click to expand SQL code</summary>
