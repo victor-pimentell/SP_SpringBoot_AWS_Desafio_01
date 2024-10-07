@@ -14,6 +14,8 @@ public class CheckoutService {
 
     private Repository<Checkout> repository;
 
+    private final Double finePerDay = 2.0;
+
     public CheckoutService() {
         repository = new Repository<>();
     }
@@ -50,7 +52,7 @@ public class CheckoutService {
                 long days = ChronoUnit.DAYS.between(dueDate, LocalDate.now());
 
                 if (days > 0) {
-                    BigDecimal fine = BigDecimal.valueOf(days * 2.0);
+                    BigDecimal fine = BigDecimal.valueOf(days * finePerDay);
 
                     checkout.setFine(fine);
                     checkout.setCheckoutState(CheckoutState.OVERDUE);

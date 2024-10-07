@@ -1,6 +1,7 @@
 package org.library.service.inter;
 
 import org.library.model.Checkout;
+import org.library.model.enums.CheckoutState;
 import org.library.repository.Repository;
 import org.library.util.DateFormat;
 
@@ -17,7 +18,8 @@ public class BorrowedBooksReport implements Report {
     @Override
     public void generateReport() {
         List<Checkout> checkouts = checkoutRepository.getAll(Checkout.class);
-        System.out.println("==================== Borrowed Books ====================");
+        checkouts = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.ACTIVE).toList();
+        System.out.println("======================================== Borrowed Books ========================================");
         for (Checkout checkout : checkouts) {
             System.out.println("ID: " + checkout.getId()
                     + " | Title: " + checkout.getBook().getTitle()
@@ -27,6 +29,6 @@ public class BorrowedBooksReport implements Report {
                     + " | Return date: " + DateFormat.dateFormat(checkout.getDueDate()) + "\n"
             );
         }
-        System.out.println("==================== Borrowed Books ====================");
+        System.out.println("======================================== Borrowed Books ========================================");
     }
 }

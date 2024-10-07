@@ -110,7 +110,7 @@ public class Book {
 
     @Override
     public String toString() {
-        return "ID: " + id
+        return "BOOK ID: " + id
                 + " | Title: " + title
                 + " | Author: " + author.getName()
                 + " | Publication Date: " + DateFormat.dateFormat(publicationDate)
