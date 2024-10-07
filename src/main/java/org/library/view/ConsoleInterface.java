@@ -36,7 +36,7 @@ public class ConsoleInterface {
     public String mainMenu() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("==================== Library System ====================\n");
+        sb.append("======================================== Library System ========================================\n");
         sb.append("1 - Register book\n");
         sb.append("2 - Register author\n");
         sb.append("3 - Register member\n");
@@ -44,19 +44,19 @@ public class ConsoleInterface {
         sb.append("5 - Return a book\n");
         sb.append("6 - Report\n");
         sb.append("0 - Close application\n");
-        sb.append("==================== Library System ====================\n");
+        sb.append("======================================== Library System ========================================\n");
         sb.append("Select an option: ");
 
         return sb.toString();
     }
 
     public Optional<Author> registerAuthor() {
-        System.out.println("==================== Author ====================");
+        System.out.println("========================================     Author     ========================================");
 
         System.out.print("Name: ");
         String name = isStringEmpty(sc.nextLine());
 
-        System.out.print("Birth date: ");
+        System.out.print("Birth date (dd/mm/yyyy): ");
         LocalDate birthDate = DateFormat.getDate(sc);
 
         System.out.print("Nationality: ");
@@ -65,23 +65,24 @@ public class ConsoleInterface {
         System.out.print("Biography: ");
         String biography = isStringEmpty(sc.nextLine());
 
-        System.out.println("==================== Author ====================");
         Author author;
         try {
             author = authorController.registerAuthor(name, birthDate, nationality, biography);
+            System.out.println("Author registered with success!");
         } catch (AuthorAlreadyRegisteredException e) {
             System.out.println(e.getMessage());
             return authorController.getAuthorByName(name);
         }
+        System.out.println("========================================     Author     ========================================");
         return Optional.ofNullable(author);
     }
 
     public void registerBook() {
-        System.out.println("==================== Book ====================");
+        System.out.println("========================================      Book      ========================================");
         System.out.print("Title: ");
         String title = isStringEmpty(sc.nextLine());
 
-        System.out.print("Publication Date: ");
+        System.out.print("Publication Date (dd/mm/yyyy): ");
         LocalDate publicationDate = DateFormat.getDate(sc);
 
         System.out.print("ISBN: ");
@@ -93,7 +94,7 @@ public class ConsoleInterface {
         String input = "";
         List<Genre> genres = new ArrayList<>();
 
-        while (!input.equalsIgnoreCase("exit")) {
+        while (!input.equalsIgnoreCase("43")) {
             try {
                 System.out.print(genreMenu());
                 input = sc.nextLine();
@@ -101,8 +102,8 @@ public class ConsoleInterface {
             } catch (InvalidOptionException e) {
                 System.out.println(e.getMessage());
             }
-
         }
+        System.out.println("========================================   Genre Menu   ========================================");
 
         Optional<Author> authorOptional = registerAuthor();
         Author author = null;
@@ -113,19 +114,21 @@ public class ConsoleInterface {
 
         try {
             bookController.registerBook(title, author, publicationDate, genres, isbn, quatity);
+            System.out.println("Book registered with success!");
         } catch (BookAlreadyRegisteredException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("==================== Book ====================");
+
+        System.out.println("========================================      Book      ========================================");
     }
 
     public void registerMember() {
-        System.out.println("==================== Member ====================");
+        System.out.println("========================================     Member     ========================================");
         System.out.print("Name: ");
         String name = isStringEmpty(sc.nextLine());
 
         System.out.print("Address: ");
-        String address = sc.nextLine();
+        String address = isStringEmpty(sc.nextLine());
 
         System.out.print("Phone Number: ");
         String phoneNumber = isStringEmpty(sc.nextLine());
@@ -133,19 +136,20 @@ public class ConsoleInterface {
         System.out.print("Email: ");
         String email = isStringEmpty(sc.nextLine());
 
-        System.out.print("Association date: ");
+        System.out.print("Association date (dd/mm/yyyy): ");
         LocalDate associationDate = DateFormat.getDate(sc);
 
         try {
             memberController.registerMember(name, address, phoneNumber, email, associationDate);
+            System.out.println("Member registered with success!");
         } catch (MemberAlreadyRegisteredException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("==================== Member ====================");
+        System.out.println("========================================     Member     ========================================");
     }
 
     public void bookCheckout() {
-        System.out.println("==================== Checkout ====================");
+        System.out.println("========================================    Checkout    ========================================");
 
         Member member = null;
 
@@ -194,14 +198,15 @@ public class ConsoleInterface {
         System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
 
         LocalDate dueDate = checkoutDate.plusDays(5);
-        System.out.print("Checkout due date set to " + DateFormat.dateFormat(dueDate));
+        System.out.println("Checkout due date set to " + DateFormat.dateFormat(dueDate));
 
         checkoutController.registerCheckout(book, member, checkoutDate, dueDate, CheckoutState.ACTIVE);
-        System.out.println("==================== Checkout ====================");
+        System.out.println("Checkout successful with success!");
+        System.out.println("========================================    Checkout    ========================================");
     }
 
     public void bookReturn() {
-        System.out.println("==================== Return ====================");
+        System.out.println("========================================     Return     ========================================");
         Member member = null;
 
         while (member == null) {
@@ -253,11 +258,12 @@ public class ConsoleInterface {
         bookController.updateBook(book);
 
         checkoutController.registerCheckout(checkout);
-        System.out.println("==================== Return ====================");
+        System.out.println("Return made successfully!");
+        System.out.println("========================================     Return     ========================================");
     }
 
     public void report() {
-        System.out.println("==================== Report ====================");
+        System.out.println("========================================     Report     ========================================");
         System.out.println("1 - Borrowed books report");
         System.out.println("2 - Members with fine report");
 
@@ -272,7 +278,7 @@ public class ConsoleInterface {
                 reportController.createMemberFineReport();
                 break;
         }
-        System.out.println("==================== Report ====================");
+        System.out.println("========================================     Report     ========================================");
     }
 
     private int verifyInteger() {
@@ -300,7 +306,7 @@ public class ConsoleInterface {
                 "0", "1", "2", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14",
                 "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27",
                 "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
-                "41", "42"
+                "41", "42", "43"
         };
 
         int input = CheckEntry.verifyMenuInput(id, options);
@@ -356,7 +362,7 @@ public class ConsoleInterface {
     private String genreMenu() {
         StringBuilder sc = new StringBuilder();
 
-        sc.append("==================== Genre Menu ====================\n");
+        sc.append("========================================   Genre Menu   ========================================\n");
         sc.append("0 - Literary Fiction     | 1 - Historical Fiction | 2 - Science Fiction | 3 - Fantasy        | 4 - Thriller     | 5 - Mystery\n");
         sc.append("6 - Romance              | 7 - Horror             | 8 - Dystopian       | 9 - Adventure      | 10 - Biography   | 11 - Autobiography\n");
         sc.append("12 - Memoir              | 13 - Self Help         | 14 - History        | 15 - True Crime    | 16 - Science     | 17 - Philosophy\n");
@@ -365,7 +371,7 @@ public class ConsoleInterface {
         sc.append("30 - Fiction             | 31 - Non-Fiction       | 32 - Drama          | 33 - Classic       | 34 - Children    | 35 - Comics\n");
         sc.append("36 - Crime               | 37 - Religion          | 38 - Art            | 39 - Guide         | 40 - Health      | 41 - Music\n");
         sc.append("42 - Sports\n");
-        sc.append("Choose the genre of the book, in case you already choose all the genres type \"exit\": ");
+        sc.append("Choose the genre of the book, in case you already choose all the genres type 43 to exit: ");
 
         return sc.toString();
     }

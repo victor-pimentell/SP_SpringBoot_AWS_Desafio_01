@@ -24,7 +24,7 @@ public class MemberFineReport implements Report {
 
         List<Checkout> overdueCheckouts = checkouts.stream().filter(x -> x.getCheckoutState() == CheckoutState.OVERDUE).toList();
 
-        System.out.println("==================== Members Fine ====================");
+        System.out.println("========================================  Members Fine  ========================================");
         for (Checkout checkout : overdueCheckouts) {
             System.out.println("ID: " + checkout.getId()
                     + " | Title: " + checkout.getBook().getTitle()
@@ -35,6 +35,6 @@ public class MemberFineReport implements Report {
                     + " | Return date: " + DateFormat.dateFormat(checkout.getDueDate()) + "\n"
             );
         }
-        System.out.println("==================== Members Fine ====================");
+        System.out.println("========================================  Members Fine  ========================================");
     }
 }

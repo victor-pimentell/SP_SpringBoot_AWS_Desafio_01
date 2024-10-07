@@ -1,6 +1,7 @@
 package org.library.model;
 
 import org.library.model.enums.CheckoutState;
+import org.library.util.DateFormat;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -39,6 +40,7 @@ public class Checkout {
         this.checkoutDate = checkoutDate;
         this.dueDate = dueDate;
         this.checkoutState = checkoutState;
+        fine = BigDecimal.valueOf(0.0);
     }
 
     public Long getId() {
@@ -108,14 +110,14 @@ public class Checkout {
 
     @Override
     public String toString() {
-        return "Checkout{" +
-                "id=" + id +
-                ", book=" + book +
-                ", member=" + member +
-                ", checkoutDate=" + checkoutDate +
-                ", dueDate=" + dueDate +
-                ", checkoutState=" + checkoutState +
-                ", fine=" + fine +
-                '}';
+        return "CHECKOUT ID: " + id +
+                " | Book: " + book +
+                " | Member: name: " + member.getName() +
+                " | email: " + member.getEmail() +
+                " | Checkout date: " + DateFormat.dateFormat(checkoutDate) +
+                " | Due date: " + DateFormat.dateFormat(dueDate) +
+                " | Checkout state: " + checkoutState +
+                " | Fine: $ " + String.format("%.2f", fine);
+
     }
 }
