@@ -1,51 +1,3 @@
-# SP_SpringBoot_AWS_Desafio_01
-
-## Library Checkout System :closed_book:
-
-The **Library Checkout System** is a Java-based application designed 
-to manage book checkouts for a library. Built with JPA, the system 
-allows the registration of books, authors, and members, as well as 
-the checkout and return of books. It also generates reports on 
-currently borrowed books and members with overdue books.
-
-## Features
-
-- Book Registration: Add new books to the library's catalog.
-- Author Registration: Add new authors to the library's catalog.
-- Member Registration: Register library members.
-- Book Checkout: Enable members to borrow available books from the library.
-- Book Return: Process the return of borrowed books.
-- Borrowed Books Report: Generate a report of books that are currently checked out.
-- Overdue Members Report: Generate a report of members who have overdue books.
-
-## Technologies Used
-
-- Java 21 LTS
-- JPA for database management
-- Maven for dependency management
-- MySQL server
-
-## Installation and Setup
-
-1. Clone the repository
-
-```bash
-  git clone https://github.com/victor-pimentell/SP_SpringBoot_AWS_Desafio_01.git
-```
-
-2. Configure the persistence.xml with your database credentials.
-
-![persistence](./docs/persistence.png)
-
-3. Run the project so the JPA can create the tables on the database
-
-4. After running the project go to your database manager and the SQL below to insert the test data.
-
-<details>
-  <summary>Click to expand SQL code</summary>
-
-  ```sql
-  -- Test Data
 INSERT INTO author (name, biography, birthDate, nationality) VALUES 
   ('George Orwell', 'English novelist, essayist, journalist, and critic. Known for his works "1984" and "Animal Farm."', '1903-06-25', 'British'),
   ('Jane Austen', 'English novelist known primarily for her six major novels including "Pride and Prejudice" and "Sense and Sensibility."', '1775-12-16', 'British'),
@@ -166,9 +118,3 @@ INSERT INTO checkout (checkoutDate, dueDate, checkoutState, fine, book_id, membe
   ('2024-09-25', '2024-09-30', 0, 0.00, 2, 7),
   ('2024-09-27', '2024-10-02', 0, 0.00, 4, 8),
   ('2024-09-25', '2024-09-30', 0, 0.00, 6, 9);
-  ```
-</details>
-
-## Author
-
-- [@victor-pimentell](https://github.com/victor-pimentell)
