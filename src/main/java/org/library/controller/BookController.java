@@ -32,4 +32,8 @@ public class BookController {
     public Book getBookById(Long id) {
         return bookService.getBookById(id);
     }
+
+    public void updateBook(Book book) {
+        bookService.updateBook(book);
+    }
 }

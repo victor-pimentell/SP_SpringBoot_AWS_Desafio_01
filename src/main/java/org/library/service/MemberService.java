@@ -1,10 +1,11 @@
 package org.library.service;
 
+import org.library.exception.MemberAlreadyRegisteredException;
 import org.library.exception.MemberNotFoundException;
 import org.library.model.Member;
 import org.library.repository.Repository;
 
-import javax.persistence.NoResultException;
+import java.util.Optional;
 
 public class MemberService {
 
@@ -15,6 +16,13 @@ public class MemberService {
     }
 
     public void registerMember(Member member) {
+        Optional<Member> memberDataBase = getMemberByEmail(member.getEmail());
+
+        if (memberDataBase.isPresent()) {
+            if (memberDataBase.get().getEmail().equalsIgnoreCase(member.getEmail())) {
+                throw new MemberAlreadyRegisteredException("This member is already registered.");
+            }
+        }
         repository.insertObj(member);
     }
 
@@ -22,11 +30,15 @@ public class MemberService {
         return repository.getObjById(Member.class, id);
     }
 
-    public Member getMemberByEmail(String email) {
+    public Optional<Member> getMemberByEmail(String email) {
+        return repository.getObjByEmail(Member.class, email);
+    }
 
-        try {
-            return repository.getObjByEmail(Member.class, email);
-        } catch (NoResultException e) {
+    public Member logMemberByEmail(String email) {
+        Optional<Member> optionalMember = repository.getObjByEmail(Member.class, email);
+        if (optionalMember.isPresent()) {
+            return optionalMember.get();
+        } else {
             throw new MemberNotFoundException("There is no member with this email");
         }
     }

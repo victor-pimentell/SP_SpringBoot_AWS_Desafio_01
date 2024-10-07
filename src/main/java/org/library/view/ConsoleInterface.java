@@ -4,10 +4,7 @@ import org.library.controller.AuthorController;
 import org.library.controller.BookController;
 import org.library.controller.CheckoutController;
 import org.library.controller.MemberController;
-import org.library.exception.CheckoutOverdueException;
-import org.library.exception.InvalidOptionException;
-import org.library.exception.MaxNumberBookBorrowedException;
-import org.library.exception.MemberNotFoundException;
+import org.library.exception.*;
 import org.library.model.Author;
 import org.library.model.Book;
 import org.library.model.Checkout;
@@ -18,10 +15,7 @@ import org.library.util.CheckEntry;
 import org.library.util.DateFormat;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class ConsoleInterface {
 
@@ -57,34 +51,42 @@ public class ConsoleInterface {
         return sb.toString();
     }
 
-    public Author registerAuthor() {
+    public Optional<Author> registerAuthor() {
         System.out.println("==================== Author ====================");
+
         System.out.print("Name: ");
-        String name = sc.nextLine();
+        String name = isStringEmpty(sc.nextLine());
 
         System.out.print("Birth date: ");
-        String birthDate = sc.nextLine();
+        LocalDate birthDate = DateFormat.getDate(sc);
 
         System.out.print("Nationality: ");
-        String nationality = sc.nextLine();
+        String nationality = isStringEmpty(sc.nextLine());
 
         System.out.print("Biography: ");
-        String biography = sc.nextLine();
+        String biography = isStringEmpty(sc.nextLine());
 
         System.out.println("==================== Author ====================");
-        return authorController.registerAuthor(name, DateFormat.getDate(birthDate), nationality, biography);
+        Author author;
+        try {
+            author = authorController.registerAuthor(name, birthDate, nationality, biography);
+        } catch (AuthorAlreadyRegisteredException e) {
+            System.out.println(e.getMessage());
+            return authorController.getAuthorByName(name);
+        }
+        return Optional.ofNullable(author);
     }
 
     public void registerBook() {
         System.out.println("==================== Book ====================");
         System.out.print("Title: ");
-        String title = sc.nextLine();
+        String title = isStringEmpty(sc.nextLine());
 
         System.out.print("Publication Date: ");
-        String publicationDate = sc.nextLine();
+        LocalDate publicationDate = DateFormat.getDate(sc);
 
         System.out.print("ISBN: ");
-        String isbn = sc.nextLine();
+        String isbn = isStringEmpty(sc.nextLine());
 
         System.out.print("Quantity: ");
         int quatity = verifyInteger();
@@ -103,30 +105,43 @@ public class ConsoleInterface {
 
         }
 
-        Author author = registerAuthor();
+        Optional<Author> authorOptional = registerAuthor();
+        Author author = null;
 
-        bookController.registerBook(title, author, DateFormat.getDate(publicationDate), genres, isbn, quatity);
+        if (authorOptional.isPresent()) {
+            author = authorOptional.get();
+        }
+
+        try {
+            bookController.registerBook(title, author, publicationDate, genres, isbn, quatity);
+        } catch (BookAlreadyRegisteredException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("==================== Book ====================");
     }
 
     public void registerMember() {
         System.out.println("==================== Member ====================");
         System.out.print("Name: ");
-        String name = sc.nextLine();
+        String name = isStringEmpty(sc.nextLine());
 
         System.out.print("Address: ");
         String address = sc.nextLine();
 
         System.out.print("Phone Number: ");
-        String phoneNumber = sc.nextLine();
+        String phoneNumber = isStringEmpty(sc.nextLine());
 
         System.out.print("Email: ");
-        String email = sc.nextLine();
+        String email = isStringEmpty(sc.nextLine());
 
         System.out.print("Association date: ");
-        String associationDate = sc.nextLine();
+        LocalDate associationDate = DateFormat.getDate(sc);
 
-        memberController.registerMember(name, address, phoneNumber, email, DateFormat.getDate(associationDate));
+        try {
+            memberController.registerMember(name, address, phoneNumber, email, associationDate);
+        } catch (MemberAlreadyRegisteredException e) {
+            System.out.println(e.getMessage());
+        }
         System.out.println("==================== Member ====================");
     }
 
@@ -139,7 +154,7 @@ public class ConsoleInterface {
             try {
                 System.out.print("Type a member's email: ");
                 String email = sc.nextLine();
-                member = memberController.getMemberByEmail(email);
+                member = memberController.logMemberByEmail(email);
             } catch (MemberNotFoundException e) {
                 System.out.println(e.getMessage());
             }
@@ -174,7 +189,7 @@ public class ConsoleInterface {
         }
 
         book.setQuantity(book.getQuantity() - 1);
-        bookController.registerBook(book);
+        bookController.updateBook(book);
 
         LocalDate checkoutDate = LocalDate.now();
         System.out.println("Checkout date set to " + DateFormat.dateFormat(checkoutDate));
@@ -194,7 +209,7 @@ public class ConsoleInterface {
             try {
                 System.out.print("Type a member's email: ");
                 String email = sc.nextLine();
-                member = memberController.getMemberByEmail(email);
+                member = memberController.logMemberByEmail(email);
             } catch (MemberNotFoundException e) {
                 System.out.println(e.getMessage());
             }
@@ -236,7 +251,7 @@ public class ConsoleInterface {
 
         Book book = bookController.getBookById(checkout.getBook().getId());
         book.setQuantity(book.getQuantity() + 1);
-        bookController.registerBook(book);
+        bookController.updateBook(book);
 
         checkoutController.registerCheckout(checkout);
         System.out.println("==================== Return ====================");
@@ -324,15 +339,24 @@ public class ConsoleInterface {
         StringBuilder sc = new StringBuilder();
 
         sc.append("==================== Genre Menu ====================\n");
-        sc.append("0 - Literary Fiction | 1 - Historical Fiction | 2 - Science Fiction | 3 - Fantasy | 4 - Thriller | 5 - Mystery\n");
-        sc.append("6 - Romance | 7 - Horror | 8 - Dystopian | 9 - Adventure | 10 - Biography | 11 - Autobiography\n");
-        sc.append("12 - Memoir | 13 - Self Help | 14 - History | 15 - True Crime | 16 - Science | 17 - Philosophy\n");
-        sc.append("18 - Business | 19 - Psychology | 20 - Poetry | 21 - Graphic Novel | 22 - Young Adult | 23 - Children's Book\n");
-        sc.append("24 - Religious/Spiritual | 25 - Travel | 26 - Cooking | 27 - Essays | 28 - Humor | 29 - Short Stories\n");
-        sc.append("30 - Fiction | 31 - Non-Fiction | 32 - Drama | 33 - Classic | 34 - Children | 35 - Comics\n");
-        sc.append("36 - Crime | 37 - Religion | 38 - Art | 39 - Guide | 40 - Health | 41 - Music | 42 - Sports\n");
+        sc.append("0 - Literary Fiction     | 1 - Historical Fiction | 2 - Science Fiction | 3 - Fantasy        | 4 - Thriller     | 5 - Mystery\n");
+        sc.append("6 - Romance              | 7 - Horror             | 8 - Dystopian       | 9 - Adventure      | 10 - Biography   | 11 - Autobiography\n");
+        sc.append("12 - Memoir              | 13 - Self Help         | 14 - History        | 15 - True Crime    | 16 - Science     | 17 - Philosophy\n");
+        sc.append("18 - Business            | 19 - Psychology        | 20 - Poetry         | 21 - Graphic Novel | 22 - Young Adult | 23 - Children's Book\n");
+        sc.append("24 - Religious/Spiritual | 25 - Travel            | 26 - Cooking        | 27 - Essays        | 28 - Humor       | 29 - Short Stories\n");
+        sc.append("30 - Fiction             | 31 - Non-Fiction       | 32 - Drama          | 33 - Classic       | 34 - Children    | 35 - Comics\n");
+        sc.append("36 - Crime               | 37 - Religion          | 38 - Art            | 39 - Guide         | 40 - Health      | 41 - Music\n");
+        sc.append("42 - Sports\n");
         sc.append("Choose the genre of the book, in case you already choose all the genres type \"exit\": ");
 
         return sc.toString();
+    }
+
+    private String isStringEmpty(String string) {
+        while (string.isBlank()) {
+            System.out.print("Please enter a valid entry: ");
+            string = sc.nextLine();
+        }
+        return string;
     }
 }
