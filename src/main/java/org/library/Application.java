@@ -39,7 +39,7 @@ public class Application {
                         consoleInterface.bookReturn();
                         break;
                     case 6:
-                        appCycle = false;
+                        consoleInterface.report();
                         break;
                     case 0:
                         appCycle = false;

@@ -1,9 +1,6 @@
 package org.library.view;
 
-import org.library.controller.AuthorController;
-import org.library.controller.BookController;
-import org.library.controller.CheckoutController;
-import org.library.controller.MemberController;
+import org.library.controller.*;
 import org.library.exception.*;
 import org.library.model.Author;
 import org.library.model.Book;
@@ -25,6 +22,7 @@ public class ConsoleInterface {
     private final BookController bookController;
     private final MemberController memberController;
     private final CheckoutController checkoutController;
+    private final ReportController reportController;
 
     public ConsoleInterface(Scanner sc) {
         this.sc = sc;
@@ -32,6 +30,7 @@ public class ConsoleInterface {
         bookController = new BookController();
         memberController = new MemberController();
         checkoutController = new CheckoutController();
+        reportController = new ReportController();
     }
 
     public String mainMenu() {
@@ -255,6 +254,25 @@ public class ConsoleInterface {
 
         checkoutController.registerCheckout(checkout);
         System.out.println("==================== Return ====================");
+    }
+
+    public void report() {
+        System.out.println("==================== Report ====================");
+        System.out.println("1 - Borrowed books report");
+        System.out.println("2 - Members with fine report");
+
+        System.out.print("Choose a report: ");
+        int input = CheckEntry.verifyMenuInput(sc.nextLine(), new String[]{"1", "2"});
+
+        switch (input) {
+            case 1:
+                reportController.createBorrowedBookReport();
+                break;
+            case 2:
+                reportController.createMemberFineReport();
+                break;
+        }
+        System.out.println("==================== Report ====================");
     }
 
     private int verifyInteger() {
